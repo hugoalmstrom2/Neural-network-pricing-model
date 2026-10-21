@@ -1,0 +1,50 @@
+resultat\modell_sobolev.pt: 4 x 128, 50305 parametrar, 200 epoker, sobolev=1.0, wide=False, hard=0.0
+
+1. Fel på 1000000 testpunkter (i öre per option, K = 100 kr)
+   MAE 1.35   RMSE 1.91   99,9 % 12.81   max 25.02   bias +0.023
+   relativt fel där C >= 1 kr: medel 1.72e-03, max 1.61e-01
+   sämsta punkt: m=1.025, tau=1.995, r=0.0013, sigma=0.105
+   träningsdata: MAE 1.36, max 25.39  (test/träning 0.998)
+   Inga av 1000000 punkter har större fel än 25.0 öre. Med 95 % konfidens är andelen
+   av domänen med större fel då under 3.0e-06, eftersom (1-p)^N <= 0,05.
+
+2. Greker från nätet (autograd) mot formlerna, 200 000 punkter
+                  MAE       max  rel. MAE
+   delta     7.62e-04  5.13e-02     0.13%
+   gamma     1.42e-02  2.49e+00     1.37%
+   vega      2.43e-03  8.74e-02     0.93%
+   dtau      1.07e-03  4.56e-02     1.68%
+   rho       5.85e-03  9.45e-02     1.24%
+
+3. PDE-residual  R = -c_tau + 1/2 sigma^2 m^2 c_mm + r m c_m - r c
+   formeln: max |R| = 1.4e-16
+   nätet:   medel |R| = 1.19e-03, max 4.68e-02, 1.88% av medel |c_tau|
+
+4. Arbitragevillkor: andel punkter med brott, största brott, nätets max-fel i samma storhet
+   c >= max(m - e^(-r tau), 0)    3.035%   1.19e-03   2.19e-03
+   c <= m                         0.000%   0.00e+00   2.19e-03
+   delta >= 0                     1.458%   2.31e-02   5.13e-02
+   delta <= 1                     1.076%   2.84e-02   5.13e-02
+   gamma >= 0                     1.786%   9.07e-01   2.49e+00
+   vega >= 0                      2.886%   7.52e-02   8.74e-02
+   dc/dtau >= 0                   1.238%   1.07e-02   4.56e-02
+   rho >= 0                       2.348%   2.38e-02   9.45e-02
+
+5. Felgräns |e| <= max_rand |e| + (tau - tau_min) max |R|, för 15 fixa (r, sigma)
+       r sigma   randfel    max|R| max|e| inne     gräns
+    0.00  0.10  1.72e-03  1.69e-02    2.98e-03  3.38e-02 
+    0.00  0.20  1.82e-03  1.87e-02    1.65e-03  3.73e-02 
+    0.00  0.30  1.20e-03  2.47e-02    1.00e-03  4.81e-02 
+    0.00  0.40  1.35e-03  3.51e-02    1.16e-03  6.80e-02 
+    0.00  0.50  1.14e-03  4.27e-02    1.14e-03  8.23e-02 
+    0.04  0.10  2.30e-03  1.14e-02    2.15e-03  2.40e-02 
+    0.04  0.20  1.01e-03  1.78e-02    8.53e-04  3.49e-02 
+    0.04  0.30  9.19e-04  2.45e-02    7.29e-04  4.75e-02 
+    0.04  0.40  1.63e-03  3.80e-02    1.33e-03  7.38e-02 
+    0.04  0.50  1.31e-03  4.68e-02    1.04e-03  9.03e-02 
+    0.08  0.10  3.08e-03  1.58e-02    2.92e-03  3.32e-02 
+    0.08  0.20  6.68e-04  1.53e-02    5.99e-04  2.98e-02 
+    0.08  0.30  8.87e-04  2.09e-02    8.95e-04  4.06e-02 
+    0.08  0.40  1.50e-03  3.49e-02    1.21e-03  6.79e-02 
+    0.08  0.50  1.34e-03  4.82e-02    1.39e-03  9.29e-02 
+   gränsen håller i alla snitt: ja

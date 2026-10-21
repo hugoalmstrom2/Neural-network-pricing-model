@@ -1,0 +1,9 @@
+ bredd parametrar       RMSE  max |fel|  tid (s)
+     4         85  5.904e-03  4.073e-02       27
+     8        265  4.883e-03  3.470e-02       38
+    16        913  3.774e-03  3.092e-02       57
+    32       3361  3.081e-03  2.112e-02       88
+    64      12865  2.507e-03  1.957e-02       73
+   128      50305  1.275e-03  1.465e-02      100
+Anpassad lutning log(RMSE) ~ -0.22 * log(parametrar)
+Sparat i resultat
