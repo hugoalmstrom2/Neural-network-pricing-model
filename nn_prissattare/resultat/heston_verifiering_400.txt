@@ -1,0 +1,29 @@
+Modell: 4 x 128, 50817 parametrar, 400 epoker, sobolev=1.0
+
+1. Prisfel på 100000 testpunkter (c = C/K; x 10 000 = öre vid K = 100 kr)
+   MAE 2.35e-04  RMSE 3.12e-04  99,9 % 1.50e-03  max 3.09e-03
+   relativt fel där C >= 1 % av K: medel 2.79e-03
+   tränings-MAE 2.76e-04 (test/träning = 0.851)
+   sämsta punkt: m=0.869, tau=1.860, r=0.047, v0=0.089, kappa=0.521, theta=0.011, xi=0.779, rho=-0.026
+
+2. Fel i implicit volatilitet (volpunkter), 73330 optioner med tidsvärde >= 0,5 % av K och |ln m| <= 0,3
+   MAE 0.085  99 % 0.460  max 1.778  (saknas för 0 st)
+
+3. Delta: MAE 7.49e-04, max 1.32e-02
+   Heston-PDE: medel |R| 2.51e-03, 99 % 1.52e-02, max 5.49e-02
+   relativt termernas storlek (medel |c_tau| = 0.071): 3.52%
+   arbitragevillkor (andel punkter med brott, största brott):
+     c >= max(m - e^-r tau, 0)    1.220%  1.2e-03
+     c <= m                       0.000%  0.0e+00
+     0 <= delta <= 1              0.680%  4.9e-03
+     gamma >= 0                   0.535%  8.6e-02
+     dc/dtau >= 0                 0.655%  4.7e-03
+     dc/dv0 >= 0                  0.795%  3.6e-02
+
+4. Tid per option (CPU)
+   nätet (batch om 100000)           1.08 mikrosek
+   COS, N=128 (snabb)            58.64 mikrosek
+   COS, N=1024 (referens)       625.80 mikrosek
+   quad (Gil-Pelaez)              7398 mikrosek
+   Monte Carlo (100k banor)     573594 mikrosek
+   Nätet är 578 gånger snabbare än referens-COS och 5e+05 gånger snabbare än MC.
